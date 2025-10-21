@@ -244,6 +244,73 @@ class DatabaseService {
     return true;
   }
 
+  // ========== DELETE GASTO ==========
+  Future<bool> deleteGasto(int gastoId, int userId) async {
+    if (kIsWeb) {
+      return _deleteGastoWeb(gastoId, userId);
+    } else {
+      return _deleteGastoMobile(gastoId);
+    }
+  }
+
+  Future<bool> _deleteGastoWeb(int gastoId, int userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final gastosJson = prefs.getString('gastos_$userId') ?? '[]';
+    final List gastos = jsonDecode(gastosJson);
+
+    gastos.removeWhere((g) => g['id'] == gastoId);
+    await prefs.setString('gastos_$userId', jsonEncode(gastos));
+    return true;
+  }
+
+  Future<bool> _deleteGastoMobile(int gastoId) async {
+    final db = await _getDatabase();
+    await db.delete('gastos', where: 'id = ?', whereArgs: [gastoId]);
+    return true;
+  }
+
+  // ========== UPDATE GASTO ==========
+  Future<bool> updateGasto(int gastoId, int userId, String cat, double monto, String desc, bool recur) async {
+    if (kIsWeb) {
+      return _updateGastoWeb(gastoId, userId, cat, monto, desc, recur);
+    } else {
+      return _updateGastoMobile(gastoId, cat, monto, desc, recur);
+    }
+  }
+
+  Future<bool> _updateGastoWeb(int gastoId, int userId, String cat, double monto, String desc, bool recur) async {
+    final prefs = await SharedPreferences.getInstance();
+    final gastosJson = prefs.getString('gastos_$userId') ?? '[]';
+    final List gastos = jsonDecode(gastosJson);
+
+    final index = gastos.indexWhere((g) => g['id'] == gastoId);
+    if (index != -1) {
+      gastos[index]['categoria'] = cat;
+      gastos[index]['monto'] = monto;
+      gastos[index]['descripcion'] = desc;
+      gastos[index]['es_recurrente'] = recur;
+      await prefs.setString('gastos_$userId', jsonEncode(gastos));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> _updateGastoMobile(int gastoId, String cat, double monto, String desc, bool recur) async {
+    final db = await _getDatabase();
+    await db.update(
+      'gastos',
+      {
+        'categoria': cat,
+        'monto': monto,
+        'descripcion': desc,
+        'es_recurrente': recur ? 1 : 0,
+      },
+      where: 'id = ?',
+      whereArgs: [gastoId],
+    );
+    return true;
+  }
+
   // ========== METAS ==========
   Future<List<Map<String, dynamic>>> getMetas(int usuarioId) async {
     if (kIsWeb) {
@@ -338,5 +405,68 @@ class DatabaseService {
       );
       return true;
     }
+  }
+
+  // ========== DELETE META ==========
+  Future<bool> deleteMeta(int metaId, int userId) async {
+    if (kIsWeb) {
+      return _deleteMetaWeb(metaId, userId);
+    } else {
+      return _deleteMetaMobile(metaId);
+    }
+  }
+
+  Future<bool> _deleteMetaWeb(int metaId, int userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final metasJson = prefs.getString('metas_$userId') ?? '[]';
+    final List metas = jsonDecode(metasJson);
+
+    metas.removeWhere((m) => m['id'] == metaId);
+    await prefs.setString('metas_$userId', jsonEncode(metas));
+    return true;
+  }
+
+  Future<bool> _deleteMetaMobile(int metaId) async {
+    final db = await _getDatabase();
+    await db.delete('metas_ahorro', where: 'id = ?', whereArgs: [metaId]);
+    return true;
+  }
+
+  // ========== UPDATE META ==========
+  Future<bool> updateMeta(int metaId, int userId, String nombre, double montoObjetivo) async {
+    if (kIsWeb) {
+      return _updateMetaWeb(metaId, userId, nombre, montoObjetivo);
+    } else {
+      return _updateMetaMobile(metaId, nombre, montoObjetivo);
+    }
+  }
+
+  Future<bool> _updateMetaWeb(int metaId, int userId, String nombre, double montoObjetivo) async {
+    final prefs = await SharedPreferences.getInstance();
+    final metasJson = prefs.getString('metas_$userId') ?? '[]';
+    final List metas = jsonDecode(metasJson);
+
+    final index = metas.indexWhere((m) => m['id'] == metaId);
+    if (index != -1) {
+      metas[index]['nombre'] = nombre;
+      metas[index]['monto_objetivo'] = montoObjetivo;
+      await prefs.setString('metas_$userId', jsonEncode(metas));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> _updateMetaMobile(int metaId, String nombre, double montoObjetivo) async {
+    final db = await _getDatabase();
+    await db.update(
+      'metas_ahorro',
+      {
+        'nombre': nombre,
+        'monto_objetivo': montoObjetivo,
+      },
+      where: 'id = ?',
+      whereArgs: [metaId],
+    );
+    return true;
   }
 }

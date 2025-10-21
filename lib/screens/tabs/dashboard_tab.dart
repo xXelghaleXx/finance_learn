@@ -5,6 +5,8 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/finance_provider.dart';
 import '../../providers/learning_provider.dart';
+import '../progress_screen.dart';
+import '../financial_health_assessment_screen.dart';
 
 class DashboardTab extends StatelessWidget {
   const DashboardTab({super.key});
@@ -149,6 +151,46 @@ class DashboardTab extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               
+              // Botones de acceso rápido
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ProgressScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.analytics, color: Colors.white),
+                      label: const Text('Ver Progreso', style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00BFA5),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const FinancialHealthAssessmentScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.health_and_safety, color: Colors.white),
+                      label: const Text('Evaluar Salud', style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
               Card(
                 color: const Color(0xFF00BFA5).withOpacity(0.1),
                 child: Padding(
@@ -163,7 +205,7 @@ class DashboardTab extends StatelessWidget {
                           children: [
                             const Text('Consejo del Día', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                             const SizedBox(height: 8),
-                            Text('Ahorra al menos el 20% de tus ingresos mensuales para construir tu fondo de emergencia.', 
+                            Text('Ahorra al menos el 20% de tus ingresos mensuales para construir tu fondo de emergencia.',
                               style: TextStyle(color: Colors.grey[700])),
                           ],
                         ),

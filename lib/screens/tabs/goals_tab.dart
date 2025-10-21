@@ -64,16 +64,29 @@ class GoalsTab extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                completada ? Icons.check_circle : Icons.flag, 
-                                color: completada ? Colors.green : const Color(0xFF00BFA5), 
+                                completada ? Icons.check_circle : Icons.flag,
+                                color: completada ? Colors.green : const Color(0xFF00BFA5),
                                 size: 30
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  nombre, 
+                                  nombre,
                                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                                 ),
+                              ),
+                              PopupMenuButton<String>(
+                                onSelected: (value) {
+                                  if (value == 'edit') {
+                                    _showEditGoalDialog(context, meta);
+                                  } else if (value == 'delete') {
+                                    _confirmDeleteGoal(context, meta['id']);
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  const PopupMenuItem(value: 'edit', child: Row(children: [Icon(Icons.edit), SizedBox(width: 8), Text('Editar')])),
+                                  const PopupMenuItem(value: 'delete', child: Row(children: [Icon(Icons.delete, color: Colors.red), SizedBox(width: 8), Text('Eliminar', style: TextStyle(color: Colors.red))])),
+                                ],
                               ),
                             ],
                           ),
@@ -245,6 +258,117 @@ class GoalsTab extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(success ? 'Progreso actualizado' : 'Error'),
+                    backgroundColor: success ? Colors.green : Colors.red,
+                  ),
+                );
+              }
+            },
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteGoal(BuildContext context, int metaId) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final finance = Provider.of<FinanceProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de que deseas eliminar esta meta?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final success = await finance.deleteMeta(metaId, auth.user!['id']);
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? 'Meta eliminada' : 'Error al eliminar'),
+                    backgroundColor: success ? Colors.green : Colors.red,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditGoalDialog(BuildContext context, Map<String, dynamic> meta) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final finance = Provider.of<FinanceProvider>(context, listen: false);
+
+    final nombreController = TextEditingController(text: meta['nombre']);
+    final montoController = TextEditingController(text: meta['monto_objetivo'].toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Editar Meta'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nombreController,
+              decoration: const InputDecoration(
+                labelText: 'Nombre de la meta',
+                border: OutlineInputBorder()
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: montoController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
+              ],
+              decoration: const InputDecoration(
+                labelText: 'Monto objetivo (S/.)',
+                border: OutlineInputBorder()
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar')
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (nombreController.text.isEmpty || montoController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Completa todos los campos'),
+                    backgroundColor: Colors.red
+                  ),
+                );
+                return;
+              }
+
+              final success = await finance.updateMeta(
+                meta['id'],
+                auth.user!['id'],
+                nombreController.text,
+                double.parse(montoController.text),
+              );
+
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? 'Meta actualizada' : 'Error'),
                     backgroundColor: success ? Colors.green : Colors.red,
                   ),
                 );

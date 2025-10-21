@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto/**)",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/pubspec.yaml\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/main.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/models/expense_model.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/models/goal_model.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/providers/auth_provider.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/providers/finance_provider.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/providers/learning_provider.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/services/database_service.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/screens/home_screen.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/screens/tabs/learn_tab.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/screens/tabs/dashboard_tab.dart\")",
+      "Bash(cat \"/c/Users/adria/OneDrive/Escritorio/Tecsup/Sexto ciclo/emprendimiento/app_demo_finance_learn/finance_learn/finance_learn/lib/screens/tabs/expenses_tab.dart\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

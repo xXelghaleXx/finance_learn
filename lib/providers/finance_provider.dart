@@ -48,6 +48,18 @@ class FinanceProvider extends ChangeNotifier {
     return success;
   }
 
+  Future<bool> deleteGasto(int gastoId, int userId) async {
+    final success = await _db.deleteGasto(gastoId, userId);
+    if (success) await loadGastos(userId);
+    return success;
+  }
+
+  Future<bool> updateGasto(int gastoId, int userId, String cat, double monto, String desc, bool recur) async {
+    final success = await _db.updateGasto(gastoId, userId, cat, monto, desc, recur);
+    if (success) await loadGastos(userId);
+    return success;
+  }
+
   Future<void> loadMetas(int userId) async {
     _isLoading = true;
     notifyListeners();
@@ -64,6 +76,18 @@ class FinanceProvider extends ChangeNotifier {
 
   Future<bool> updateMetaProgress(int userId, int metaId, double nuevoMonto) async {
     final success = await _db.updateMetaProgress(metaId, nuevoMonto);
+    if (success) await loadMetas(userId);
+    return success;
+  }
+
+  Future<bool> deleteMeta(int metaId, int userId) async {
+    final success = await _db.deleteMeta(metaId, userId);
+    if (success) await loadMetas(userId);
+    return success;
+  }
+
+  Future<bool> updateMeta(int metaId, int userId, String nombre, double montoObjetivo) async {
+    final success = await _db.updateMeta(metaId, userId, nombre, montoObjetivo);
     if (success) await loadMetas(userId);
     return success;
   }
