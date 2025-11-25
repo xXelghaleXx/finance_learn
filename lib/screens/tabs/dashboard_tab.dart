@@ -7,6 +7,7 @@ import '../../providers/finance_provider.dart';
 import '../../providers/learning_provider.dart';
 import '../progress_screen.dart';
 import '../financial_health_assessment_screen.dart';
+import '../chatbot_screen.dart';
 
 class DashboardTab extends StatelessWidget {
   const DashboardTab({super.key});
@@ -189,6 +190,23 @@ class DashboardTab extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+
+ElevatedButton.icon(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChatBotScreen()),
+    );
+  },
+  icon: const Icon(Icons.chat, color: Colors.white),
+  label: const Text('Hablar con FinnChatBot', style: TextStyle(color: Colors.white)),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFF00BFA5),
+    padding: const EdgeInsets.symmetric(vertical: 14),
+  ),
+),
+
               const SizedBox(height: 20),
 
               Card(
